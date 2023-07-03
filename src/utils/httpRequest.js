@@ -12,21 +12,11 @@ export const url = {
 	signIn: "user/login",
 	signUp: "user/signup",
 	getUser: "user/detail",
+	hotel: "hotel/user",
 	province: "location/provine",
 	district: "location/district/",
 	homelet: "location/homelet/",
-	hotel: "hotel/filter",
-	detailHotel: "hotel/",
-	bookedRooms: "booking",
-	refreshToken: "user/refresh-token",
-	cancelBooking: "booking/",
-	createBooking: "booking",
-	postComment: "comment",
-	updateComment: "comment",
-	forgotPassword: "user/fogot-password",
-	editProfile: "user",
-	changePw: "user/change-password",
-	resetPassword: "user/reset-password",
+	createHotel: "hotel",
 };
 
 /**

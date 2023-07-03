@@ -89,11 +89,11 @@ export const validateEmail = (errors, username) => {
 	}
 };
 export const validatePassword = (errors, password, key = "password") => {
-	const decimal = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
+	const decimal = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,}$/;
 	if (password === "") {
 		errors[key] = "Vui lòng nhập mật khẩu!";
 	} else if (!decimal.test(password)) {
-		errors[key] = "Mật khẩu tối thiểu 8 ký tự. Chứa ít nhất 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt";
+		errors[key] = "Mật khẩu tối thiểu 6 ký tự. Chứa ít nhất 1 ký tự in hoa, 1 ký tự số và 1 ký tự đặc biệt";
 	}
 };
 export const validatePhone = (errors, phone) => {

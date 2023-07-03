@@ -1,6 +1,13 @@
+import { useDispatch } from "react-redux";
 import reactLogo from "../../assets/react.svg";
+import { logout } from "../../services/userServices";
 
 export default function Header() {
+	const dispatch = useDispatch();
+	const handleLogout = (e) => {
+		e.preventDefault();
+		logout(dispatch);
+	};
 	return (
 		<>
 			{/* Navbar Start */}
@@ -14,6 +21,8 @@ export default function Header() {
 					href="#"
 					onClick={(e) => {
 						e.preventDefault();
+						$(".sidebar, .content").toggleClass("open");
+						return false;
 					}}
 					className="sidebar-toggler flex-shrink-0">
 					<i className="fa fa-bars" />
@@ -101,7 +110,7 @@ export default function Header() {
 							<a href="#" className="dropdown-item">
 								Settings
 							</a>
-							<a href="#" className="dropdown-item">
+							<a onClick={handleLogout} href="#" className="dropdown-item">
 								Log Out
 							</a>
 						</div>

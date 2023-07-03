@@ -1,5 +1,6 @@
 import Header from "../Header";
 import Sidebar from "../Sidebar";
+import Footer from "../Footer";
 
 export default function DefaultLayout({ children }) {
 	return (
@@ -7,7 +8,16 @@ export default function DefaultLayout({ children }) {
 			<Sidebar />
 			<div className="content">
 				<Header />
-				{children}
+				<div
+					className="container-fluid pt-4 px-4"
+					style={{
+						minHeight: "calc(100vh - 64px)",
+					}}>
+					{children}
+				</div>
+				<div className="container-fluid pt-4 px-4">
+					<Footer />
+				</div>
 			</div>
 		</div>
 	);

@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../routes";
 
-export default function RoomPage() {
+export default function BookingRoomPage() {
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
-				<h6 className="mb-0">Danh sách phòng</h6>
-				<Link to={routes.hotel + "/" + "1" + "/room/create"} className="btn btn-outline-primary">
-					Thêm phòng
-				</Link>
+				<h6 className="mb-0">Danh sách đơn đặt phòng</h6>
 			</div>
 			<div className="table-responsive">
 				<table className="table">
@@ -20,6 +17,7 @@ export default function RoomPage() {
 							<th scope="col">Email</th>
 							<th scope="col">Country</th>
 							<th scope="col">Chi tiết</th>
+							<th scope="col">Duyệt</th>
 							<th scope="col">Xóa/Hủy</th>
 						</tr>
 					</thead>
@@ -31,8 +29,13 @@ export default function RoomPage() {
 							<td>jhon@email.com</td>
 							<td>USA</td>
 							<td>
-								<Link to={routes.hotel + "/" + "1" + "/room/" + "1"} className="btn btn-outline-primary">
+								<Link to={routes.hotel + "/" + "1" + "/room"} className="btn btn-outline-primary">
 									Xem
+								</Link>
+							</td>
+							<td>
+								<Link to={routes.hotel + "/" + "1" + "/booking"} className="btn btn-outline-primary">
+									Duyệt
 								</Link>
 							</td>
 							<td>

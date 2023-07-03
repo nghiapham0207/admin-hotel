@@ -58,7 +58,7 @@ export default function SignUpPage() {
 						lastName,
 						userName: username,
 						password,
-						role: ["user"],
+						role: ["admin"],
 					});
 					console.log(res);
 					toast.update(toastId, {

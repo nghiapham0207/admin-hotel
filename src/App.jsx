@@ -10,6 +10,7 @@ import { renderRoutes } from "./utils/helpers";
 import { privateRoutes, publicRoutes, routes } from "./routes/routes";
 import { selectUser } from "./redux/selectors";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProtectedRoute = ({ redirectPath = "/sign-in" }) => {
 	const currentUser = useSelector(selectUser);

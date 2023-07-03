@@ -27,7 +27,7 @@ export default function SignInPage() {
 	const dispatch = useDispatch();
 
 	if (currentUser) {
-		return <Navigate to={routes.home} />;
+		return <Navigate to={routes.hotel} />;
 	}
 
 	const handleSubmit = (e) => {
