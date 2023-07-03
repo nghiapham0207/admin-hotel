@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import reactLogo from "../../assets/react.svg";
 import { routes } from "../../routes";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/selectors";
 
 export default function Sidebar() {
+	const currentUser = useSelector(selectUser);
 	return (
 		<>
 			{/* Sidebar Start */}
@@ -13,12 +16,20 @@ export default function Sidebar() {
 					</a>
 					<div className="d-flex align-items-center ms-4 mb-4">
 						<div className="position-relative">
-							<img className="rounded-circle" src={reactLogo} alt="" style={{ width: 40, height: 40 }} />
+							<img
+								className="rounded-circle"
+								src={currentUser.avatar || reactLogo}
+								alt=""
+								style={{ width: 40, height: 40 }}
+								onError={(e) => {
+									e.target.src = reactLogo;
+								}}
+							/>
 							<div className="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1" />
 						</div>
 						<div className="ms-3">
-							<h6 className="mb-0">Jhon Doe</h6>
-							<span>Admin</span>
+							<h6 className="mb-0">{currentUser.firstName + " " + currentUser.lastName}</h6>
+							<span>Admin Hotel</span>
 						</div>
 					</div>
 					<div className="navbar-nav w-100">

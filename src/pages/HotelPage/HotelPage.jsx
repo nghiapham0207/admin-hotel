@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosJWT, axiosPost, url } from "../../utils/httpRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
+import { toast } from "react-toastify";
 
 const categories = [
 	{ id: 1, name: "Hotel", hotels: null },
@@ -39,6 +40,36 @@ export default function HotelPage() {
 	if (listHotelState.isSuccess && listHotelState.data.data.success) {
 		listHotel = listHotelState.data.data.hotels;
 	}
+	const handleDelete = async (id) => {
+		if (confirm("Bạn có muốn xóa không?") == true) {
+			const toastId = toast.loading("Đang xử lý!");
+			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
+			try {
+				const res = await axiosJwt.delete(url.deleteHotel + "/" + id, {
+					headers: {
+						Authorization: "Bearer " + accessToken,
+					},
+				});
+				console.log(res);
+				toast.update(toastId, {
+					render: "Xóa thành công!",
+					type: "success",
+					closeButton: true,
+					autoClose: 1000,
+					isLoading: false,
+				});
+			} catch (error) {
+				console.log(error);
+				toast.update(toastId, {
+					render: "Không thể xóa!",
+					type: "error",
+					closeButton: true,
+					autoClose: 1000,
+					isLoading: false,
+				});
+			}
+		}
+	};
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
@@ -57,7 +88,7 @@ export default function HotelPage() {
 							<th scope="col">Loại</th>
 							<th scope="col">Chi tiết</th>
 							<th scope="col">Phòng</th>
-							<th scope="col">Đặt phòng</th>
+							<th scope="col">Đơn đặt phòng</th>
 							<th scope="col">Xóa/Hủy</th>
 						</tr>
 					</thead>
@@ -91,7 +122,14 @@ export default function HotelPage() {
 											</Link>
 										</td>
 										<td>
-											<button className="btn btn-danger">Xóa</button>
+											<button
+												type="button"
+												onClick={() => {
+													handleDelete(hotel.id);
+												}}
+												className="btn btn-danger">
+												Xóa
+											</button>
 										</td>
 									</tr>
 							  ))

@@ -1,8 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import reactLogo from "../../assets/react.svg";
 import { logout } from "../../services/userServices";
+import { selectUser } from "../../redux/selectors";
 
 export default function Header() {
+	const currentUser = useSelector(selectUser);
 	const dispatch = useDispatch();
 	const handleLogout = (e) => {
 		e.preventDefault();
@@ -100,18 +102,23 @@ export default function Header() {
 					</div>
 					<div className="nav-item dropdown">
 						<a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-							<img className="rounded-circle me-lg-2" src={reactLogo} alt="" style={{ width: 40, height: 40 }} />
-							<span className="d-none d-lg-inline-flex">John Doe</span>
+							<img
+								className="rounded-circle me-lg-2"
+								src={currentUser.avatar || reactLogo}
+								alt=""
+								style={{ width: 40, height: 40 }}
+								onError={(e) => {
+									e.target.src = reactLogo;
+								}}
+							/>
+							<span className="d-none d-lg-inline-flex">{currentUser.firstName + " " + currentUser.lastName}</span>
 						</a>
-						<div className="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+						<div className="dropdown-menu dropdown-menu-end bg-white border rounded m-0">
 							<a href="#" className="dropdown-item">
-								My Profile
-							</a>
-							<a href="#" className="dropdown-item">
-								Settings
+								Cài đặt
 							</a>
 							<a onClick={handleLogout} href="#" className="dropdown-item">
-								Log Out
+								Đăng xuất
 							</a>
 						</div>
 					</div>

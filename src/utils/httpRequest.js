@@ -17,6 +17,11 @@ export const url = {
 	district: "location/district/",
 	homelet: "location/homelet/",
 	createHotel: "hotel",
+	refreshToken: "user/refresh-token",
+	createRoom: "room",
+	bookingList: "booking",
+	deleteHotel: "hotel",
+	room: "hotel/",
 };
 
 /**

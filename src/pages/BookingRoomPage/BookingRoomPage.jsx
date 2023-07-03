@@ -1,7 +1,37 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../routes";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
+import { axiosJWT, url } from "../../utils/httpRequest";
+import { useQuery } from "@tanstack/react-query";
 
 export default function BookingRoomPage() {
+	const currentUser = useSelector(selectUser);
+	const accessToken = useSelector(selectAccessToken);
+	const refreshToken = useSelector(selectRefreshToken);
+	const dispatch = useDispatch();
+	const listHotelState = useQuery({
+		queryKey: ["bookingList", currentUser],
+		queryFn: async () => {
+			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
+			try {
+				const res = await axiosJwt.get(url.hotel, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				});
+				return res;
+			} catch (error) {
+				console.log(error);
+				return Promise.reject(error);
+			}
+		},
+		staleTime: 3 * 60 * 1000,
+	});
+	let listHotel = [];
+	if (listHotelState.isSuccess && listHotelState.data.data.success) {
+		listHotel = listHotelState.data.data.hotels;
+	}
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
