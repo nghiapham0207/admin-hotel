@@ -19,9 +19,10 @@ export const url = {
 	createHotel: "hotel",
 	refreshToken: "user/refresh-token",
 	createRoom: "room",
-	bookingList: "booking",
-	deleteHotel: "hotel",
+	bookingList: "booking/hotel/",
+	deleteHotel: "hotel/",
 	room: "hotel/",
+	deleteRoom: "room/",
 };
 
 /**

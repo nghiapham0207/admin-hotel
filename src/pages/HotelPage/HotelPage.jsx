@@ -45,12 +45,13 @@ export default function HotelPage() {
 			const toastId = toast.loading("Đang xử lý!");
 			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 			try {
-				const res = await axiosJwt.delete(url.deleteHotel + "/" + id, {
+				const res = await axiosJwt.delete(url.deleteHotel + id, {
 					headers: {
 						Authorization: "Bearer " + accessToken,
 					},
 				});
-				console.log(res);
+				// console.log(res);
+				listHotelState.refetch();
 				toast.update(toastId, {
 					render: "Xóa thành công!",
 					type: "success",
@@ -61,7 +62,7 @@ export default function HotelPage() {
 			} catch (error) {
 				console.log(error);
 				toast.update(toastId, {
-					render: "Không thể xóa!",
+					render: "Không thể xóa! Khách sạn này đã có phòng! Xóa phòng trước!",
 					type: "error",
 					closeButton: true,
 					autoClose: 1000,

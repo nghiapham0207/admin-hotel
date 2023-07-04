@@ -41,49 +41,31 @@ export default function CreateRoomPage() {
 		e.preventDefault();
 		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 		const toastId = toast.loading("Đang xử lý!");
+		const formData = new FormData();
+		const today = new Date();
+		formData.append("Id", 0);
+		formData.append("Name", nameRef.current.value);
+		formData.append("NumOfPeope", guestRef.current.value);
+		formData.append("NumOfBed", numOfBedRef.current.value);
+		formData.append("TypeOfBed", typeRef.current.value);
+		formData.append("Description", descriptionRef.current.value);
+		formData.append("Price", priceRef.current.value);
+		formData.append("TotalRoom", totalRef.current.value);
+		formData.append("Refund", refundRef.current.checked);
+		formData.append("Reschedule", rescheduleRef.current.checked);
+		formData.append("CreatedDate", today.toISOString());
+		formData.append("UpdateDate", today.toISOString());
+		formData.append("HotelId", hotelId);
+		formData.append("Images", img1Ref.current);
+		formData.append("Images", img2Ref.current);
+		formData.append("Images", img3Ref.current);
 		try {
-			const today = new Date();
-			console.log({
-				Id: 0,
-				Name: nameRef.current.value,
-				NumOfPeope: guestRef.current.value,
-				NumOfBed: numOfBedRef.current.value,
-				TypeOfBed: typeRef.current.value,
-				Description: descriptionRef.current.value,
-				Price: priceRef.current.value,
-				TotalRoom: totalRef.current.value,
-				Refund: refundRef.current.checked,
-				Reschedule: rescheduleRef.current.checked,
-				CreatedDate: today.toISOString(),
-				UpdateDate: today.toISOString(),
-				HotelId: hotelId,
-				Images: [img1Ref.current, img2Ref.current, img3Ref.current],
+			const res = await axiosJwt.post(url.createRoom, formData, {
+				headers: {
+					Authorization: "Bearer " + accessToken,
+					"Content-Type": "multipart/form-data",
+				},
 			});
-			const res = await axiosJwt.post(
-				url.createRoom,
-				{
-					Id: 0,
-					Name: nameRef.current.value,
-					NumOfPeope: guestRef.current.value,
-					NumOfBed: numOfBedRef.current.value,
-					TypeOfBed: typeRef.current.value,
-					Description: descriptionRef.current.value,
-					Price: priceRef.current.value,
-					TotalRoom: totalRef.current.value,
-					Refund: refundRef.current.checked,
-					Reschedule: rescheduleRef.current.checked,
-					CreatedDate: today.toISOString(),
-					UpdateDate: today.toISOString(),
-					HotelId: hotelId,
-					Images: [img1Ref.current, img2Ref.current, img3Ref.current],
-				},
-				{
-					headers: {
-						Authorization: "Bearer " + accessToken,
-						"Content-Type": "multipart/form-data",
-					},
-				},
-			);
 			console.log(res);
 			if (res.data.success) {
 				e.target.reset();

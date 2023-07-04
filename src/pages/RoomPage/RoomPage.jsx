@@ -1,10 +1,17 @@
 import { Link, useParams } from "react-router-dom";
 import { routes } from "../../routes";
-import { axiosGet, url } from "../../utils/httpRequest";
+import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
 
 export default function RoomPage() {
 	const { hotelId } = useParams();
+	const currentUser = useSelector(selectUser);
+	const accessToken = useSelector(selectAccessToken);
+	const refreshToken = useSelector(selectRefreshToken);
+	const dispatch = useDispatch();
 	const hotelState = useQuery({
 		queryKey: ["hotel", hotelId],
 		queryFn: async () => {
@@ -22,6 +29,37 @@ export default function RoomPage() {
 	if (hotelState.isSuccess) {
 		rooms = hotelState.data.hotelDto.rooms;
 	}
+	const handleDelete = async (id) => {
+		if (confirm("Bạn có muốn xóa không?") == true) {
+			const toastId = toast.loading("Đang xử lý!");
+			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
+			try {
+				const res = await axiosJwt.delete(url.deleteRoom + id, {
+					headers: {
+						Authorization: "Bearer " + accessToken,
+					},
+				});
+				console.log(res);
+				hotelState.refetch();
+				toast.update(toastId, {
+					render: "Xóa thành công!",
+					type: "success",
+					closeButton: true,
+					autoClose: 1000,
+					isLoading: false,
+				});
+			} catch (error) {
+				console.log(error);
+				toast.update(toastId, {
+					render: "Không thể xóa! Phòng đã được đặt!",
+					type: "error",
+					closeButton: true,
+					autoClose: 1000,
+					isLoading: false,
+				});
+			}
+		}
+	};
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
@@ -58,7 +96,14 @@ export default function RoomPage() {
 											</Link>
 										</td>
 										<td>
-											<button className="btn btn-danger">Xóa</button>
+											<button
+												type="button"
+												onClick={() => {
+													handleDelete(room.id);
+												}}
+												className="btn btn-danger">
+												Xóa
+											</button>
 										</td>
 									</tr>
 							  ))
