@@ -6,7 +6,9 @@ import HotelPage from "../pages/HotelPage";
 import CreateHotelPage from "../pages/CreateHotelPage";
 import RoomPage from "../pages/RoomPage";
 import CreateRoomPage from "../pages/CreateRoomPage";
-import BookingRoomPage from "../pages/BookingRoomPage/BookingRoomPage";
+import BookingRoomPage from "../pages/BookingRoomPage";
+import UpdateHotelPage from "../pages/UpdateHotelPage";
+import UpdateRoomPage from "../pages/UpdateRoomPage";
 
 export const routes = {
 	signIn: "/sign-in",
@@ -24,22 +26,14 @@ export const routes = {
 export const publicRoutes = [
 	{ path: routes.signIn, page: SignInPage, layout: NonLayout },
 	{ path: routes.signUp, page: SignUpPage, layout: NonLayout },
-	// { path: routes.hotel, page: HotelPage, layout: null },
-	// { path: routes.createHotel, page: CreateHotelPage, layout: null },
-	// { path: routes.updateHotel, page: CreateHotelPage, layout: null },
-	// { path: routes.room, page: RoomPage, layout: null },
-	// { path: routes.createRoom, page: CreateRoomPage, layout: null },
-	// { path: routes.updateRoom, page: CreateRoomPage, layout: null },
-	// { path: routes.booking, page: CreateHotelPage, layout: null },
 ];
 
-// export const privateRoutes = [{ path: routes.hotel, page: HotelPage, layout: null }];
 export const privateRoutes = [
 	{ path: routes.hotel, page: HotelPage, layout: null },
 	{ path: routes.createHotel, page: CreateHotelPage, layout: null },
-	{ path: routes.updateHotel, page: CreateHotelPage, layout: null },
+	{ path: routes.updateHotel, page: UpdateHotelPage, layout: null },
 	{ path: routes.room, page: RoomPage, layout: null },
 	{ path: routes.createRoom, page: CreateRoomPage, layout: null },
-	{ path: routes.updateRoom, page: CreateRoomPage, layout: null },
+	{ path: routes.updateRoom, page: UpdateRoomPage, layout: null },
 	{ path: routes.booking, page: BookingRoomPage, layout: null },
 ];

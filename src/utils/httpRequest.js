@@ -23,6 +23,10 @@ export const url = {
 	deleteHotel: "hotel/",
 	room: "hotel/",
 	deleteRoom: "room/",
+	detailHotel: "hotel/",
+	updateHotel: "hotel",
+	detailRoom: "room/",
+	updateRoom: "room",
 };
 
 /**

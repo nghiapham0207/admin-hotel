@@ -146,7 +146,7 @@ export default function SignInPage() {
 								</div>
 								<a href="#">Quên mật khẩu?</a>
 							</div>
-							<button type="submit" className="btn btn-primary w-100 py-3 mb-4">
+							<button type="submit" className="btn btn-primary w-100 py-2 mb-4">
 								Đăng nhập
 							</button>
 							<p className="text-center mb-0">

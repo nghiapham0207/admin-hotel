@@ -34,7 +34,7 @@ export default function HotelPage() {
 				return Promise.reject(error);
 			}
 		},
-		staleTime: 3 * 60 * 1000,
+		// staleTime: 3 * 60 * 1000,
 	});
 	let listHotel = [];
 	if (listHotelState.isSuccess && listHotelState.data.data.success) {
@@ -74,7 +74,7 @@ export default function HotelPage() {
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
-				<h6 className="mb-0">Danh sách khách sạn</h6>
+				<h5 className="mb-0">Danh sách khách sạn</h5>
 				<Link to={routes.createHotel} className="btn btn-outline-primary">
 					Thêm khách sạn
 				</Link>

@@ -1,14 +1,13 @@
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
 import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
-import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRef, useState } from "react";
 import HorizontalInput from "../../components/HorizontalInput";
 import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
 
 const categories = [
 	{ id: 1, name: "Hotel", hotels: null },
@@ -17,7 +16,7 @@ const categories = [
 	{ id: 4, name: "Resort", hotels: null },
 ];
 
-export default function CreateHotelPage() {
+export default function UpdateHotelPage() {
 	const nameRef = useRef();
 	const descriptionRef = useRef();
 	const addressRef = useRef();
@@ -47,6 +46,19 @@ export default function CreateHotelPage() {
 	const [getDistrict, setGetDistrict] = useState(false);
 	const [getHomelet, setGetHomelet] = useState(false);
 
+	const { hotelId } = useParams();
+	const hotelState = useQuery({
+		queryKey: ["hotel", hotelId],
+		queryFn: async () => {
+			try {
+				const res = await axiosGet(url.detailHotel + hotelId);
+				return res;
+			} catch (error) {
+				return Promise.reject(error);
+			}
+		},
+		staleTime: 3 * 60 * 1000,
+	});
 	const hotelProvince = useQuery({
 		queryKey: ["hotelProvince"],
 		queryFn: async () => {
@@ -135,7 +147,13 @@ export default function CreateHotelPage() {
 			homeletRef.current.value = undefined;
 		}
 	};
-	const handlePost = async (e) => {
+	let hotel = {};
+	if (hotelState.isSuccess && hotelState.data.success) {
+		hotel = hotelState.data.hotelDto;
+	} else {
+		return null;
+	}
+	const handleUpdate = async (e) => {
 		e.preventDefault();
 		if (homeletRef.current.value === "undefined") {
 			provinceRef.current.focus();
@@ -145,14 +163,14 @@ export default function CreateHotelPage() {
 		const toastId = toast.loading("Đang xử lý!");
 		const formData = new FormData();
 		const today = new Date();
-		formData.append("id", 0);
+		formData.append("id", hotelId);
 		formData.append("name", nameRef.current.value);
-		formData.append("star", 0);
+		formData.append("star", hotel.star === "NaN" ? 0 : hotel.star);
 		formData.append("description", descriptionRef.current.value);
 		formData.append("address", addressRef.current.value);
 		formData.append("logo", avatarRef.current);
 		formData.append("slug", slugRef.current.value);
-		formData.append("createdDate", today.toISOString());
+		formData.append("createdDate", hotel.createdDate);
 		formData.append("updateDate", today.toISOString());
 		formData.append("uSerId", currentUser.id);
 		formData.append("hotelCategoryId", categoryRef.current.value);
@@ -169,13 +187,12 @@ export default function CreateHotelPage() {
 		formData.append("parking", parkingRef.current.checked);
 		formData.append("allowPet", allowPetRef.current.checked);
 		try {
-			const res = await axiosJwt.post(url.createHotel, formData, {
+			const res = await axiosJwt.put(url.updateHotel, formData, {
 				headers: {
 					Authorization: "Bearer " + accessToken,
 					"Content-Type": "multipart/form-data",
 				},
 			});
-			console.log(res);
 			if (res.data.success) {
 				e.target.reset();
 				toast.update(toastId, {
@@ -189,7 +206,7 @@ export default function CreateHotelPage() {
 		} catch (error) {
 			console.log(error);
 			toast.update(toastId, {
-				render: "Không thể tạo!",
+				render: "Không thể cập nhật!",
 				type: "error",
 				closeButton: true,
 				autoClose: 1000,
@@ -199,11 +216,11 @@ export default function CreateHotelPage() {
 	};
 	return (
 		<div className="bg-light rounded h-100 p-5">
-			<h4 className="mb-4">Thêm khách sạn</h4>
-			<form onSubmit={handlePost}>
-				<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} />
-				<HorizontalInput label={"Mô tả"} ref={descriptionRef} required={true} />
-				<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} />
+			<h4 className="mb-4">Cập nhật khách sạn</h4>
+			<form onSubmit={handleUpdate}>
+				<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} defaultValue={hotel.name} />
+				<HorizontalInput label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />
+				<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} defaultValue={hotel.address} />
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label">
 						Hình ảnh
@@ -214,7 +231,8 @@ export default function CreateHotelPage() {
 							onChange={(e) => {
 								avatarRef.current = e.target.files[0];
 							}}
-							placeholder=""
+							placeholder="avatarRef"
+							// defaultValue={hotel.logoLink}
 							className="form-control"
 							type="file"
 							id="formFile"
@@ -222,10 +240,10 @@ export default function CreateHotelPage() {
 						/>
 					</div>
 				</div>
-				<HorizontalInput label={"Slug"} ref={slugRef} required={true} />
-				<HorizontalSelect label={"Loại khách sạn"} ref={categoryRef}>
+				<HorizontalInput label={"Slug"} ref={slugRef} required={true} defaultValue={hotel.slug} />
+				<HorizontalSelect label={"Loại khách sạn"} ref={categoryRef} defaultValue={hotel.hotelCategory.id}>
 					{categories.map((category) => (
-						<option key={category.id} defaultChecked={category.id === 1 ? true : false} value={category.id}>
+						<option key={category.id} value={category.id}>
 							{category.name}
 						</option>
 					))}
@@ -265,27 +283,36 @@ export default function CreateHotelPage() {
 						</option>
 					))}
 				</HorizontalSelect>
+
 				{/* Benefit khong can */}
 				<fieldset className="row mb-3">
 					<legend className="col-form-label col-sm-3 pt-0">Tiện ích khách sạn</legend>
 					<div className="col-sm-9">
-						<Checkbox label={"Nhà hàng"} ref={restaurantRef} />
-						<Checkbox label={"Lễ tân 24h"} ref={_24hRef} />
-						<Checkbox label={"Thang máy"} ref={elevatorRef} />
-						<Checkbox label={"Bể bơi"} ref={poolRef} />
-						<Checkbox label={"Bữa sáng miễn phí"} ref={freeBreakfastRef} />
-						<Checkbox label={"Máy điều hòa"} ref={airConditionerRef} />
-						<Checkbox label={"Thuê xe"} ref={lendingCarRef} />
-						<Checkbox label={"Wifi free"} ref={wifiFreeRef} />
-						<Checkbox label={"Chỗ đậu xe"} ref={parkingRef} />
-						<Checkbox label={"Cho phép dắt thú cưng"} ref={allowPetRef} />
+						<Checkbox label={"Nhà hàng"} ref={restaurantRef} defaultChecked={hotel.hotelBenefit.resttaurant} />
+						<Checkbox label={"Lễ tân 24h"} ref={_24hRef} defaultChecked={hotel.hotelBenefit.allTimeFrontDesk} />
+						<Checkbox label={"Thang máy"} ref={elevatorRef} defaultChecked={hotel.hotelBenefit.elevator} />
+						<Checkbox label={"Bể bơi"} ref={poolRef} defaultChecked={hotel.hotelBenefit.pool} />
+						<Checkbox
+							label={"Bữa sáng miễn phí"}
+							ref={freeBreakfastRef}
+							defaultChecked={hotel.hotelBenefit.freeBreakfast}
+						/>
+						<Checkbox
+							label={"Máy điều hòa"}
+							ref={airConditionerRef}
+							defaultChecked={hotel.hotelBenefit.airConditioner}
+						/>
+						<Checkbox label={"Thuê xe"} ref={lendingCarRef} defaultChecked={hotel.hotelBenefit.carBorow} />
+						<Checkbox label={"Wifi free"} ref={wifiFreeRef} defaultChecked={hotel.hotelBenefit.wifiFree} />
+						<Checkbox label={"Chỗ đậu xe"} ref={parkingRef} defaultChecked={hotel.hotelBenefit.parking} />
+						<Checkbox label={"Cho phép dắt thú cưng"} ref={allowPetRef} defaultChecked={hotel.hotelBenefit.allowPet} />
 					</div>
 				</fieldset>
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label"></label>
 					<div className="col-sm-9">
 						<button type="submit" className="btn btn-primary">
-							Thêm mới
+							Cập nhật
 						</button>
 						<button
 							type="button"

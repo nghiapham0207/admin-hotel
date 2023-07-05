@@ -90,7 +90,7 @@ export default function CreateRoomPage() {
 	};
 	return (
 		<div className="bg-light rounded h-100 p-5">
-			<h6 className="mb-4">Thêm phòng</h6>
+			<h4 className="mb-4">Thêm phòng</h4>
 			<form onSubmit={handlePost}>
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label">

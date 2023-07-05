@@ -104,3 +104,53 @@ export const validatePhone = (errors, phone) => {
 		errors.phone = "Số điện thoại không đúng định dạng! Ví dụ: 0234242524";
 	}
 };
+
+async function fetchFileFromUrl(url) {
+	try {
+		const response = await fetch(url);
+		const data = await response.blob();
+		const filename = getFileNameFromUrl(url); // Helper function to extract filename from URL
+		return new File([data], filename);
+	} catch (error) {
+		console.error("Error fetching file:", error);
+		return null;
+	}
+}
+
+function getFileNameFromUrl(url) {
+	const urlParts = url.split("/");
+	return urlParts[urlParts.length - 1];
+}
+
+// Usage example:
+// const url = "https://example.com/sample.pdf";
+// const file = fetchFileFromUrl(url);
+
+// file.then((fileObj) => {
+// 	if (fileObj) {
+// 		console.log("File object:", fileObj);
+// 		// You can now use the 'fileObj' like a File object.
+// 		// For example, you can pass it to a FormData or upload it to a server.
+// 	} else {
+// 		console.log("Failed to fetch the file.");
+// 	}
+// });
+
+async function setFileInInput(url, inputId) {
+	const file = await fetchFileFromUrl(url);
+	if (file) {
+		const inputElement = document.getElementById(inputId);
+		const fileList = new DataTransfer();
+		fileList.items.add(file);
+		inputElement.files = fileList.files;
+	} else {
+		console.log("Failed to fetch the file.");
+	}
+}
+
+// Usage example
+const urlLogo =
+	"http://res.cloudinary.com/dnshdled2/image/upload/v1688477770/hotel_management/fileupload-2023-07-04-08-36-10_ghfiuh.jpg";
+
+const inputId = "myFileInput";
+// setFileInInput(urlLogo, inputId);
