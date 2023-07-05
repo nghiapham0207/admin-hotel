@@ -62,6 +62,14 @@ export default function UpdateRoomPage() {
 	}
 	const handleUpdate = async (e) => {
 		e.preventDefault();
+		if (img1Ref.current || img2Ref.current || img3Ref.current) {
+			if (!(img1Ref.current && img2Ref.current && img3Ref.current)) {
+				toast.error("Vui lòng chọn đầy đủ ảnh!", {
+					autoClose: 2000,
+				});
+				return;
+			}
+		}
 		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 		const toastId = toast.loading("Đang xử lý!");
 		const formData = new FormData();
@@ -109,6 +117,9 @@ export default function UpdateRoomPage() {
 					autoClose: 1000,
 					isLoading: false,
 				});
+				if (img1Ref.current && img2Ref.current && img3Ref.current) {
+					handleUpdateGalleries();
+				}
 			}
 		} catch (error) {
 			console.log(error);
@@ -118,6 +129,27 @@ export default function UpdateRoomPage() {
 				closeButton: true,
 				autoClose: 1000,
 				isLoading: false,
+			});
+		}
+	};
+	const handleUpdateGalleries = async () => {
+		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
+		const formData = new FormData();
+		formData.append("RoomId", roomId);
+		formData.append("Images", img1Ref.current);
+		formData.append("Images", img2Ref.current);
+		formData.append("Images", img3Ref.current);
+		try {
+			const res = await axiosJwt.post(url.updateGalleries, formData, {
+				headers: {
+					Authorization: "Bearer " + accessToken,
+				},
+			});
+			console.log(res);
+		} catch (error) {
+			console.log(error);
+			toast.error("Cập nhật ảnh thất bại!", {
+				autoClose: 2000,
 			});
 		}
 	};
@@ -184,7 +216,7 @@ export default function UpdateRoomPage() {
 					</label>
 					<div className="col-sm-9">
 						<input
-							required
+							// required
 							onChange={(e) => {
 								img1Ref.current = e.target.files[0];
 							}}
@@ -202,7 +234,7 @@ export default function UpdateRoomPage() {
 					</label>
 					<div className="col-sm-9">
 						<input
-							required
+							// required
 							onChange={(e) => {
 								img2Ref.current = e.target.files[0];
 							}}
@@ -220,7 +252,7 @@ export default function UpdateRoomPage() {
 					</label>
 					<div className="col-sm-9">
 						<input
-							required
+							// required
 							onChange={(e) => {
 								img3Ref.current = e.target.files[0];
 							}}

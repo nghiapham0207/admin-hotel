@@ -27,6 +27,7 @@ export const url = {
 	updateHotel: "hotel",
 	detailRoom: "room/",
 	updateRoom: "room",
+	updateGalleries: "room/gallery",
 };
 
 /**
