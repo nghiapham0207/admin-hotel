@@ -9,6 +9,7 @@ import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/s
 import HorizontalInput from "../../components/HorizontalInput";
 import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
+import TextAreaMe from "../../components/TextAreaMe";
 
 const categories = [
 	{ id: 1, name: "Hotel", hotels: null },
@@ -202,7 +203,7 @@ export default function CreateHotelPage() {
 			<h4 className="mb-4">Thêm khách sạn</h4>
 			<form onSubmit={handlePost}>
 				<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} />
-				<HorizontalInput label={"Mô tả"} ref={descriptionRef} required={true} />
+				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} />
 				<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} />
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label">

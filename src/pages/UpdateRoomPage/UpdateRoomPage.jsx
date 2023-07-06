@@ -9,6 +9,7 @@ import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
 import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
 import { selectAccessToken, selectRefreshToken } from "../../redux/selectors";
+import TextAreaMe from "../../components/TextAreaMe/TextAreaMe";
 
 const typeOfBed = [
 	{
@@ -206,7 +207,7 @@ export default function UpdateRoomPage() {
 						</option>
 					))}
 				</HorizontalSelect>
-				<HorizontalInput ref={descriptionRef} label={"Mô tả"} defaultValue={room.description} required={true} />
+				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={room.description} />
 				<HorizontalInput
 					ref={priceRef}
 					type="number"

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { axiosJWT, url } from "../../utils/httpRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken, selectRefreshToken } from "../../redux/selectors";
+import TextAreaMe from "../../components/TextAreaMe/TextAreaMe";
 
 const typeOfBed = [
 	{
@@ -146,14 +147,7 @@ export default function CreateRoomPage() {
 						</select>
 					</div>
 				</div>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label">
-						Mô tả
-					</label>
-					<div className="col-sm-9">
-						<input ref={descriptionRef} placeholder="" type="text" required className="form-control" />
-					</div>
-				</div>
+				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} />
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label">
 						Giá phòng

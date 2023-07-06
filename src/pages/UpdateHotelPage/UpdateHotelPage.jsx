@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HorizontalInput from "../../components/HorizontalInput";
 import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
+import TextAreaMe from "../../components/TextAreaMe/TextAreaMe";
 
 const categories = [
 	{ id: 1, name: "Hotel", hotels: null },
@@ -47,12 +48,33 @@ export default function UpdateHotelPage() {
 	const [getHomelet, setGetHomelet] = useState(false);
 
 	const { hotelId } = useParams();
-	const hotelState = useQuery({
+	const hotelDetailState = useQuery({
 		queryKey: ["hotel", hotelId],
 		queryFn: async () => {
 			try {
-				const res = await axiosGet(url.detailHotel + hotelId);
-				return res;
+				const hotelRes = await axiosGet(url.detailHotel + hotelId);
+				console.log(hotelRes);
+				let districtRes;
+				try {
+					districtRes = await axiosGet(url.district + hotelRes.hotelDto.provineId);
+				} catch (error) {
+					return Promise.reject(error);
+				}
+				console.log(districtRes);
+				let homeletRes;
+				try {
+					homeletRes = await axiosGet(url.homelet + hotelRes.hotelDto.districtId);
+				} catch (error) {
+					return Promise.reject(error);
+				}
+				return {
+					...hotelRes,
+					hotelDto: {
+						...hotelRes.hotelDto,
+						districts: districtRes.data,
+						homelets: homeletRes.data,
+					},
+				};
 			} catch (error) {
 				return Promise.reject(error);
 			}
@@ -127,9 +149,9 @@ export default function UpdateHotelPage() {
 			}
 			districtRef.current.disabled = true;
 			districtRef.current.value = undefined;
-			homeletRef.current.disabled = true;
-			homeletRef.current.value = undefined;
 		}
+		homeletRef.current.disabled = true;
+		homeletRef.current.value = undefined;
 	};
 	const handleDistrictChange = (e) => {
 		const value = e.target.value;
@@ -148,16 +170,16 @@ export default function UpdateHotelPage() {
 		}
 	};
 	let hotel = {};
-	if (hotelState.isSuccess && hotelState.data.success) {
-		hotel = hotelState.data.hotelDto;
+	if (hotelDetailState.isSuccess && hotelDetailState.data.success) {
+		hotel = hotelDetailState.data.hotelDto;
 	} else {
 		return null;
 	}
 	const handleUpdate = async (e) => {
 		e.preventDefault();
+		let homeletId = homeletRef.current.value;
 		if (homeletRef.current.value === "undefined") {
-			provinceRef.current.focus();
-			return;
+			homeletId = hotel.homeletId;
 		}
 		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 		const toastId = toast.loading("Đang xử lý!");
@@ -175,7 +197,7 @@ export default function UpdateHotelPage() {
 		formData.append("USerId", currentUser.id);
 		formData.append("HotelCategoryId", categoryRef.current.value);
 		formData.append("HotelBenefitId", hotel.hotelBenefit.id);
-		formData.append("HomeletId", homeletRef.current.value);
+		formData.append("HomeletId", homeletId);
 		formData.append("Resttaurant", restaurantRef.current.checked);
 		formData.append("AllTimeFrontDesk", _24hRef.current.checked);
 		formData.append("Elevator", elevatorRef.current.checked);
@@ -214,12 +236,18 @@ export default function UpdateHotelPage() {
 			});
 		}
 	};
+	setTimeout(() => {
+		// if (hotelDetailState.isSuccess) {
+		// 	var event = new Event("change");
+		// 	provinceRef.current.dispatchEvent(event);
+		// }
+	}, 1000);
 	return (
 		<div className="bg-light rounded h-100 p-5">
 			<h4 className="mb-4">Cập nhật khách sạn</h4>
 			<form onSubmit={handleUpdate}>
 				<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} defaultValue={hotel.name} />
-				<HorizontalInput label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />
+				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />
 				<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} defaultValue={hotel.address} />
 				<div className="row mb-3">
 					<label htmlFor="" className="col-sm-3 col-form-label">
@@ -248,10 +276,13 @@ export default function UpdateHotelPage() {
 						</option>
 					))}
 				</HorizontalSelect>
-				<HorizontalSelect label={"Tỉnh/Thành phố"} ref={provinceRef} required={true} onChange={handleProvinceChange}>
-					<option defaultChecked value="undefined">
-						Chọn tỉnh/thành phố
-					</option>
+				<HorizontalSelect
+					label={"Tỉnh/Thành phố"}
+					ref={provinceRef}
+					defaultValue={hotel.provineId}
+					required={true}
+					onChange={handleProvinceChange}>
+					<option value="undefined">Chọn tỉnh/thành phố</option>
 					{provinces?.map((province) => (
 						<option key={province.id} value={province.id}>
 							{province.name}
@@ -262,26 +293,40 @@ export default function UpdateHotelPage() {
 					label={"Quận/Huyện"}
 					ref={districtRef}
 					required={true}
+					defaultValue={hotel.districtId}
 					// disable={true}
 					onChange={handleDistrictChange}>
-					<option defaultChecked value="undefined">
-						Chọn quận/huyện
-					</option>
-					{districts?.map((district) => (
-						<option key={district.id} value={district.id}>
-							{district.name}
-						</option>
-					))}
+					<option value="undefined">Chọn quận/huyện</option>
+					{districts?.length > 0
+						? districts?.map((district) => (
+								<option key={district.id} value={district.id}>
+									{district.name}
+								</option>
+						  ))
+						: hotel.districts.map((district) => (
+								<option key={district.id} value={district.id}>
+									{district.name}
+								</option>
+						  ))}
 				</HorizontalSelect>
-				<HorizontalSelect label={"Xã/Phường"} ref={homeletRef} required={true} disable={true}>
-					<option value="undefined" defaultChecked>
-						Chọn xã/phường
-					</option>
-					{homelets?.map((homelet) => (
-						<option key={homelet.id} value={homelet.id}>
-							{homelet.name}
-						</option>
-					))}
+				<HorizontalSelect
+					label={"Xã/Phường"}
+					// required={true}
+					// disable={true}
+					defaultValue={hotel.homeletId}
+					ref={homeletRef}>
+					<option value="undefined">Chọn xã/phường</option>
+					{homelets?.length > 0
+						? homelets?.map((homelet) => (
+								<option key={homelet.id} value={homelet.id}>
+									{homelet.name}
+								</option>
+						  ))
+						: hotel.homelets.map((homelet) => (
+								<option key={homelet.id} value={homelet.id}>
+									{homelet.name}
+								</option>
+						  ))}
 				</HorizontalSelect>
 
 				{/* Benefit khong can */}
