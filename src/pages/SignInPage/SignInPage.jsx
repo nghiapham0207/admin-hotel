@@ -144,7 +144,7 @@ export default function SignInPage() {
 										Hiện mật khẩu!
 									</label>
 								</div>
-								<a href="#">Quên mật khẩu?</a>
+								<Link to={routes.forgotPassword}>Quên mật khẩu?</Link>
 							</div>
 							<button type="submit" className="btn btn-primary w-100 py-2 mb-4">
 								Đăng nhập

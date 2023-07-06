@@ -9,10 +9,14 @@ import CreateRoomPage from "../pages/CreateRoomPage";
 import BookingRoomPage from "../pages/BookingRoomPage";
 import UpdateHotelPage from "../pages/UpdateHotelPage";
 import UpdateRoomPage from "../pages/UpdateRoomPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
 
 export const routes = {
 	signIn: "/sign-in",
 	signUp: "/sign-up",
+	forgotPassword: "/forgot-password",
+	resetPassword: "/reset-password",
 
 	hotel: "/hotel",
 	createHotel: "/hotel/create",
@@ -26,6 +30,8 @@ export const routes = {
 export const publicRoutes = [
 	{ path: routes.signIn, page: SignInPage, layout: NonLayout },
 	{ path: routes.signUp, page: SignUpPage, layout: NonLayout },
+	{ path: routes.forgotPassword, page: ForgotPasswordPage, layout: NonLayout },
+	{ path: routes.resetPassword, page: ResetPasswordPage, layout: NonLayout },
 ];
 
 export const privateRoutes = [

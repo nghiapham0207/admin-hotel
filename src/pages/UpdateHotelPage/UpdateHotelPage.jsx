@@ -163,29 +163,29 @@ export default function UpdateHotelPage() {
 		const toastId = toast.loading("Đang xử lý!");
 		const formData = new FormData();
 		const today = new Date();
-		formData.append("id", hotelId);
-		formData.append("name", nameRef.current.value);
-		formData.append("star", hotel.star === "NaN" ? 0 : hotel.star);
-		formData.append("description", descriptionRef.current.value);
-		formData.append("address", addressRef.current.value);
-		formData.append("logo", avatarRef.current);
-		formData.append("slug", slugRef.current.value);
-		formData.append("createdDate", hotel.createdDate);
-		formData.append("updateDate", today.toISOString());
-		formData.append("uSerId", currentUser.id);
-		formData.append("hotelCategoryId", categoryRef.current.value);
-		formData.append("hotelBenefitId", 0);
-		formData.append("homeletId", homeletRef.current.value);
-		formData.append("resttaurant", restaurantRef.current.checked);
-		formData.append("allTimeFrontDesk", _24hRef.current.checked);
-		formData.append("elevator", elevatorRef.current.checked);
-		formData.append("pool", poolRef.current.checked);
-		formData.append("freeBreakfast", freeBreakfastRef.current.checked);
-		formData.append("airConditioner", airConditionerRef.current.checked);
-		formData.append("carBorrow", lendingCarRef.current.checked);
-		formData.append("wifiFree", wifiFreeRef.current.checked);
-		formData.append("parking", parkingRef.current.checked);
-		formData.append("allowPet", allowPetRef.current.checked);
+		formData.append("Id", hotelId);
+		formData.append("Name", nameRef.current.value);
+		formData.append("Star", hotel.star === "NaN" ? 5 : hotel.star);
+		formData.append("Description", descriptionRef.current.value);
+		formData.append("Address", addressRef.current.value);
+		formData.append("Logo", avatarRef.current);
+		formData.append("Slug", slugRef.current.value);
+		formData.append("CreatedDate", hotel.createdDate);
+		formData.append("UpdateDate", today.toISOString());
+		formData.append("USerId", currentUser.id);
+		formData.append("HotelCategoryId", categoryRef.current.value);
+		formData.append("HotelBenefitId", hotel.hotelBenefit.id);
+		formData.append("HomeletId", homeletRef.current.value);
+		formData.append("Resttaurant", restaurantRef.current.checked);
+		formData.append("AllTimeFrontDesk", _24hRef.current.checked);
+		formData.append("Elevator", elevatorRef.current.checked);
+		formData.append("Pool", poolRef.current.checked);
+		formData.append("FreeBreakfast", freeBreakfastRef.current.checked);
+		formData.append("AirConditioner", airConditionerRef.current.checked);
+		formData.append("CarBorow", lendingCarRef.current.checked);
+		formData.append("WifiFree", wifiFreeRef.current.checked);
+		formData.append("Parking", parkingRef.current.checked);
+		formData.append("AllowPet", allowPetRef.current.checked);
 		try {
 			const res = await axiosJwt.put(url.updateHotel, formData, {
 				headers: {
@@ -194,7 +194,7 @@ export default function UpdateHotelPage() {
 				},
 			});
 			if (res.data.success) {
-				e.target.reset();
+				// e.target.reset();
 				toast.update(toastId, {
 					render: res.data.message,
 					type: "success",
@@ -227,7 +227,7 @@ export default function UpdateHotelPage() {
 					</label>
 					<div className="col-sm-9">
 						<input
-							required
+							// required
 							onChange={(e) => {
 								avatarRef.current = e.target.files[0];
 							}}
@@ -262,7 +262,7 @@ export default function UpdateHotelPage() {
 					label={"Quận/Huyện"}
 					ref={districtRef}
 					required={true}
-					disable={true}
+					// disable={true}
 					onChange={handleDistrictChange}>
 					<option defaultChecked value="undefined">
 						Chọn quận/huyện

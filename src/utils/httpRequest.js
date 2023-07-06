@@ -28,6 +28,9 @@ export const url = {
 	detailRoom: "room/",
 	updateRoom: "room",
 	updateGalleries: "room/gallery",
+	deleteGalleries: "room/gallery",
+	forgotPassword: "user/fogot-password",
+	resetPassword: "user/reset-password",
 };
 
 /**

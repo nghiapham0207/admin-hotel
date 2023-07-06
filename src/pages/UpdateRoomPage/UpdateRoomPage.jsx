@@ -118,6 +118,7 @@ export default function UpdateRoomPage() {
 					isLoading: false,
 				});
 				if (img1Ref.current && img2Ref.current && img3Ref.current) {
+					handleDeleteGalleries();
 					handleUpdateGalleries();
 				}
 			}
@@ -151,6 +152,30 @@ export default function UpdateRoomPage() {
 			toast.error("Cập nhật ảnh thất bại!", {
 				autoClose: 2000,
 			});
+		}
+	};
+
+	const handleDeleteGalleries = async () => {
+		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
+		const dto = [];
+		room.hotelImageGalleries.forEach((img) => {
+			dto.push(img.id);
+		});
+		const body = {
+			dto: [...dto],
+		};
+		try {
+			const res = await axiosJwt.delete(url.deleteGalleries, {
+				headers: {
+					Authorization: "Bearer " + accessToken,
+				},
+				data: {
+					...body,
+				},
+			});
+			console.log(res);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 	return (
