@@ -9,7 +9,8 @@ import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
 import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
 import { selectAccessToken, selectRefreshToken } from "../../redux/selectors";
-import TextAreaMe from "../../components/TextAreaMe/TextAreaMe";
+import TextAreaMe from "../../components/TextAreaMe";
+import RoomGallery from "../../components/RoomGallery";
 
 const typeOfBed = [
 	{
@@ -180,133 +181,169 @@ export default function UpdateRoomPage() {
 		}
 	};
 	return (
-		<div className="bg-light rounded h-100 p-5">
-			<h4 className="mb-4">Cập nhật thông tin phòng</h4>
-			<form onSubmit={handleUpdate}>
-				<HorizontalInput ref={nameRef} label={"Tên phòng"} defaultValue={room.name} required={true} />
-				<HorizontalInput
-					ref={guestRef}
-					type="number"
-					min={0}
-					label={"Số khách 1 phòng"}
-					defaultValue={room.numOfPeope}
-					required={true}
-				/>
-				<HorizontalInput
-					ref={numOfBedRef}
-					type="number"
-					min={0}
-					label={"Số giường"}
-					defaultValue={room.numOfBed}
-					required={true}
-				/>
-				<HorizontalSelect label={"Loại giường"} ref={typeRef} defaultValue={room.name}>
-					{typeOfBed.map((value) => (
-						<option key={value.id} defaultChecked={value.id === 1 ? true : false} value={value.name}>
-							{value.name}
-						</option>
-					))}
-				</HorizontalSelect>
-				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={room.description} />
-				<HorizontalInput
-					ref={priceRef}
-					type="number"
-					min={0}
-					label={"Giá phòng"}
-					defaultValue={room.price}
-					required={true}
-				/>
-				<HorizontalInput
-					ref={totalRef}
-					type="number"
-					min={0}
-					label={"Số phòng"}
-					defaultValue={room.totalRoom}
-					required={true}
-				/>
-				<div className="row mb-3">
-					<legend className="col-form-label col-sm-3 pt-0">Hoàn tiền</legend>
-					<div className="col-sm-9">
-						<Checkbox label={"Được phép"} ref={refundRef} defaultChecked={room.refund} />
+		<>
+			<div
+				className="modal fade"
+				id={"room" + room.id}
+				data-bs-backdrop="static"
+				data-bs-keyboard="false"
+				tabIndex="-1"
+				aria-labelledby={"room" + room.id + "Label"}
+				aria-hidden="true">
+				<div className="modal-dialog modal-lg">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h1 className="modal-title fs-5" id={"room" + room.id + "Label"}>
+								Ảnh Phòng
+							</h1>
+							<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div className="modal-body">
+							<RoomGallery room={room} />
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+						</div>
 					</div>
 				</div>
-				<div className="row mb-3">
-					<legend className="col-form-label col-sm-3 pt-0">Đổi lịch</legend>
-					<div className="col-sm-9">
-						<Checkbox label={"Được phép"} ref={rescheduleRef} defaultChecked={room.reschedule} />
+			</div>
+			<div className="bg-light rounded h-100 p-5">
+				<h4 className="mb-4">Cập nhật thông tin phòng</h4>
+				<form onSubmit={handleUpdate}>
+					<HorizontalInput ref={nameRef} label={"Tên phòng"} defaultValue={room.name} required={true} />
+					<HorizontalInput
+						ref={guestRef}
+						type="number"
+						min={0}
+						label={"Số khách 1 phòng"}
+						defaultValue={room.numOfPeope}
+						required={true}
+					/>
+					<HorizontalInput
+						ref={numOfBedRef}
+						type="number"
+						min={0}
+						label={"Số giường"}
+						defaultValue={room.numOfBed}
+						required={true}
+					/>
+					<HorizontalSelect label={"Loại giường"} ref={typeRef} defaultValue={room.name}>
+						{typeOfBed.map((value) => (
+							<option key={value.id} defaultChecked={value.id === 1 ? true : false} value={value.name}>
+								{value.name}
+							</option>
+						))}
+					</HorizontalSelect>
+					<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={room.description} />
+					<HorizontalInput
+						ref={priceRef}
+						type="number"
+						min={0}
+						label={"Giá phòng"}
+						defaultValue={room.price}
+						required={true}
+					/>
+					<HorizontalInput
+						ref={totalRef}
+						type="number"
+						min={0}
+						label={"Số phòng"}
+						defaultValue={room.totalRoom}
+						required={true}
+					/>
+					<div className="row mb-3">
+						<legend className="col-form-label col-sm-3 pt-0">Hoàn tiền</legend>
+						<div className="col-sm-9">
+							<Checkbox label={"Được phép"} ref={refundRef} defaultChecked={room.refund} />
+						</div>
 					</div>
-				</div>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label">
-						Hình ảnh
-					</label>
-					<div className="col-sm-9">
-						<input
-							// required
-							onChange={(e) => {
-								img1Ref.current = e.target.files[0];
-							}}
-							placeholder=""
-							className="form-control"
-							type="file"
-							id="formFile"
-							accept="image/*"
-						/>
+					<div className="row mb-3">
+						<legend className="col-form-label col-sm-3 pt-0">Đổi lịch</legend>
+						<div className="col-sm-9">
+							<Checkbox label={"Được phép"} ref={rescheduleRef} defaultChecked={room.reschedule} />
+						</div>
 					</div>
-				</div>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label">
-						Hình ảnh
-					</label>
-					<div className="col-sm-9">
-						<input
-							// required
-							onChange={(e) => {
-								img2Ref.current = e.target.files[0];
-							}}
-							placeholder=""
-							className="form-control"
-							type="file"
-							id="formFile"
-							accept="image/*"
-						/>
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label">
+							Hình ảnh
+						</label>
+						<div className="col-sm-9">
+							<input
+								// required
+								onChange={(e) => {
+									img1Ref.current = e.target.files[0];
+								}}
+								placeholder=""
+								className="form-control"
+								type="file"
+								id="formFile"
+								accept="image/*"
+							/>
+						</div>
 					</div>
-				</div>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label">
-						Hình ảnh
-					</label>
-					<div className="col-sm-9">
-						<input
-							// required
-							onChange={(e) => {
-								img3Ref.current = e.target.files[0];
-							}}
-							placeholder=""
-							className="form-control"
-							type="file"
-							id="formFile"
-							accept="image/*"
-						/>
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label">
+							Hình ảnh
+						</label>
+						<div className="col-sm-9">
+							<input
+								// required
+								onChange={(e) => {
+									img2Ref.current = e.target.files[0];
+								}}
+								placeholder=""
+								className="form-control"
+								type="file"
+								id="formFile"
+								accept="image/*"
+							/>
+						</div>
 					</div>
-				</div>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label"></label>
-					<div className="col-sm-9">
-						<button type="submit" className="btn btn-primary">
-							Cập nhật
-						</button>
-						<button
-							type="button"
-							onClick={() => {
-								navigate(-1);
-							}}
-							className="ms-3 btn btn-danger">
-							Hủy
-						</button>
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label">
+							Hình ảnh
+						</label>
+						<div className="col-sm-9">
+							<input
+								// required
+								onChange={(e) => {
+									img3Ref.current = e.target.files[0];
+								}}
+								placeholder=""
+								className="form-control"
+								type="file"
+								id="formFile"
+								accept="image/*"
+							/>
+							<button
+								type="button"
+								className="btn btn-outline-info mt-2"
+								data-bs-toggle="modal"
+								data-bs-target={"#room" + room.id}>
+								Xem ảnh hiện tại
+							</button>
+						</div>
 					</div>
-				</div>
-			</form>
-		</div>
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label"></label>
+						<div className="col-sm-9">
+							<button type="submit" className="btn btn-primary">
+								Cập nhật
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									navigate(-1);
+								}}
+								className="ms-3 btn btn-danger">
+								Hủy
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</>
 	);
 }

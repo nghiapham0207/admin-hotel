@@ -243,133 +243,182 @@ export default function UpdateHotelPage() {
 		// }
 	}, 1000);
 	return (
-		<div className="bg-light rounded h-100 p-5">
-			<h4 className="mb-4">Cập nhật khách sạn</h4>
-			<form onSubmit={handleUpdate}>
-				<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} defaultValue={hotel.name} />
-				<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />
-				<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} defaultValue={hotel.address} />
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label">
-						Hình ảnh
-					</label>
-					<div className="col-sm-9">
-						<input
-							// required
-							onChange={(e) => {
-								avatarRef.current = e.target.files[0];
-							}}
-							placeholder="avatarRef"
-							// defaultValue={hotel.logoLink}
-							className="form-control"
-							type="file"
-							id="formFile"
-							accept="image/*"
-						/>
+		<>
+			<div
+				className="modal fade"
+				id={"hotel" + hotel.id}
+				data-bs-backdrop="static"
+				data-bs-keyboard="false"
+				tabIndex="-1"
+				aria-labelledby={"hotel" + hotel.id + "Label"}
+				aria-hidden="true">
+				<div className="modal-dialog modal-lg">
+					<div className="modal-content">
+						<div className="modal-header">
+							<h1 className="modal-title fs-5" id={"hotel" + hotel.id + "Label"}>
+								Ảnh khách sạn
+							</h1>
+							<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div className="modal-body">
+							<div className="d-flex justify-content-center">
+								<img
+									style={{
+										width: 550,
+										height: 360,
+										objectFit: "contain",
+									}}
+									src={hotel.logoLink}
+								/>
+							</div>
+						</div>
+						<div className="modal-footer">
+							<button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+								Close
+							</button>
+						</div>
 					</div>
 				</div>
-				<HorizontalInput label={"Slug"} ref={slugRef} required={true} defaultValue={hotel.slug} />
-				<HorizontalSelect label={"Loại khách sạn"} ref={categoryRef} defaultValue={hotel.hotelCategory.id}>
-					{categories.map((category) => (
-						<option key={category.id} value={category.id}>
-							{category.name}
-						</option>
-					))}
-				</HorizontalSelect>
-				<HorizontalSelect
-					label={"Tỉnh/Thành phố"}
-					ref={provinceRef}
-					defaultValue={hotel.provineId}
-					required={true}
-					onChange={handleProvinceChange}>
-					<option value="undefined">Chọn tỉnh/thành phố</option>
-					{provinces?.map((province) => (
-						<option key={province.id} value={province.id}>
-							{province.name}
-						</option>
-					))}
-				</HorizontalSelect>
-				<HorizontalSelect
-					label={"Quận/Huyện"}
-					ref={districtRef}
-					required={true}
-					defaultValue={hotel.districtId}
-					// disable={true}
-					onChange={handleDistrictChange}>
-					<option value="undefined">Chọn quận/huyện</option>
-					{districts?.length > 0
-						? districts?.map((district) => (
-								<option key={district.id} value={district.id}>
-									{district.name}
-								</option>
-						  ))
-						: hotel.districts.map((district) => (
-								<option key={district.id} value={district.id}>
-									{district.name}
-								</option>
-						  ))}
-				</HorizontalSelect>
-				<HorizontalSelect
-					label={"Xã/Phường"}
-					// required={true}
-					// disable={true}
-					defaultValue={hotel.homeletId}
-					ref={homeletRef}>
-					<option value="undefined">Chọn xã/phường</option>
-					{homelets?.length > 0
-						? homelets?.map((homelet) => (
-								<option key={homelet.id} value={homelet.id}>
-									{homelet.name}
-								</option>
-						  ))
-						: hotel.homelets.map((homelet) => (
-								<option key={homelet.id} value={homelet.id}>
-									{homelet.name}
-								</option>
-						  ))}
-				</HorizontalSelect>
+			</div>
+			<div className="bg-light rounded h-100 p-5">
+				<h4 className="mb-4">Cập nhật khách sạn</h4>
+				<form onSubmit={handleUpdate}>
+					<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} defaultValue={hotel.name} />
+					<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />
+					<HorizontalInput label={"Địa chỉ"} ref={addressRef} required={true} defaultValue={hotel.address} />
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label">
+							Hình ảnh
+						</label>
+						<div className="col-sm-9">
+							<input
+								// required
+								onChange={(e) => {
+									avatarRef.current = e.target.files[0];
+								}}
+								placeholder="avatarRef"
+								// defaultValue={hotel.logoLink}
+								className="form-control"
+								type="file"
+								id="formFile"
+								accept="image/*"
+							/>
+							<button
+								type="button"
+								className="btn btn-outline-info mt-2"
+								data-bs-toggle="modal"
+								data-bs-target={"#hotel" + hotel.id}>
+								Xem ảnh hiện tại
+							</button>
+						</div>
+					</div>
+					<HorizontalInput label={"Slug"} ref={slugRef} required={true} defaultValue={hotel.slug} />
+					<HorizontalSelect label={"Loại khách sạn"} ref={categoryRef} defaultValue={hotel.hotelCategory.id}>
+						{categories.map((category) => (
+							<option key={category.id} value={category.id}>
+								{category.name}
+							</option>
+						))}
+					</HorizontalSelect>
+					<HorizontalSelect
+						label={"Tỉnh/Thành phố"}
+						ref={provinceRef}
+						defaultValue={hotel.provineId}
+						required={true}
+						onChange={handleProvinceChange}>
+						<option value="undefined">Chọn tỉnh/thành phố</option>
+						{provinces?.map((province) => (
+							<option key={province.id} value={province.id}>
+								{province.name}
+							</option>
+						))}
+					</HorizontalSelect>
+					<HorizontalSelect
+						label={"Quận/Huyện"}
+						ref={districtRef}
+						required={true}
+						defaultValue={hotel.districtId}
+						// disable={true}
+						onChange={handleDistrictChange}>
+						<option value="undefined">Chọn quận/huyện</option>
+						{districts?.length > 0
+							? districts?.map((district) => (
+									<option key={district.id} value={district.id}>
+										{district.name}
+									</option>
+							  ))
+							: hotel.districts.map((district) => (
+									<option key={district.id} value={district.id}>
+										{district.name}
+									</option>
+							  ))}
+					</HorizontalSelect>
+					<HorizontalSelect
+						label={"Xã/Phường"}
+						// required={true}
+						// disable={true}
+						defaultValue={hotel.homeletId}
+						ref={homeletRef}>
+						<option value="undefined">Chọn xã/phường</option>
+						{homelets?.length > 0
+							? homelets?.map((homelet) => (
+									<option key={homelet.id} value={homelet.id}>
+										{homelet.name}
+									</option>
+							  ))
+							: hotel.homelets.map((homelet) => (
+									<option key={homelet.id} value={homelet.id}>
+										{homelet.name}
+									</option>
+							  ))}
+					</HorizontalSelect>
 
-				{/* Benefit khong can */}
-				<fieldset className="row mb-3">
-					<legend className="col-form-label col-sm-3 pt-0">Tiện ích khách sạn</legend>
-					<div className="col-sm-9">
-						<Checkbox label={"Nhà hàng"} ref={restaurantRef} defaultChecked={hotel.hotelBenefit.resttaurant} />
-						<Checkbox label={"Lễ tân 24h"} ref={_24hRef} defaultChecked={hotel.hotelBenefit.allTimeFrontDesk} />
-						<Checkbox label={"Thang máy"} ref={elevatorRef} defaultChecked={hotel.hotelBenefit.elevator} />
-						<Checkbox label={"Bể bơi"} ref={poolRef} defaultChecked={hotel.hotelBenefit.pool} />
-						<Checkbox
-							label={"Bữa sáng miễn phí"}
-							ref={freeBreakfastRef}
-							defaultChecked={hotel.hotelBenefit.freeBreakfast}
-						/>
-						<Checkbox
-							label={"Máy điều hòa"}
-							ref={airConditionerRef}
-							defaultChecked={hotel.hotelBenefit.airConditioner}
-						/>
-						<Checkbox label={"Thuê xe"} ref={lendingCarRef} defaultChecked={hotel.hotelBenefit.carBorow} />
-						<Checkbox label={"Wifi free"} ref={wifiFreeRef} defaultChecked={hotel.hotelBenefit.wifiFree} />
-						<Checkbox label={"Chỗ đậu xe"} ref={parkingRef} defaultChecked={hotel.hotelBenefit.parking} />
-						<Checkbox label={"Cho phép dắt thú cưng"} ref={allowPetRef} defaultChecked={hotel.hotelBenefit.allowPet} />
+					{/* Benefit khong can */}
+					<fieldset className="row mb-3">
+						<legend className="col-form-label col-sm-3 pt-0">Tiện ích khách sạn</legend>
+						<div className="col-sm-9">
+							<Checkbox label={"Nhà hàng"} ref={restaurantRef} defaultChecked={hotel.hotelBenefit.resttaurant} />
+							<Checkbox label={"Lễ tân 24h"} ref={_24hRef} defaultChecked={hotel.hotelBenefit.allTimeFrontDesk} />
+							<Checkbox label={"Thang máy"} ref={elevatorRef} defaultChecked={hotel.hotelBenefit.elevator} />
+							<Checkbox label={"Bể bơi"} ref={poolRef} defaultChecked={hotel.hotelBenefit.pool} />
+							<Checkbox
+								label={"Bữa sáng miễn phí"}
+								ref={freeBreakfastRef}
+								defaultChecked={hotel.hotelBenefit.freeBreakfast}
+							/>
+							<Checkbox
+								label={"Máy điều hòa"}
+								ref={airConditionerRef}
+								defaultChecked={hotel.hotelBenefit.airConditioner}
+							/>
+							<Checkbox label={"Thuê xe"} ref={lendingCarRef} defaultChecked={hotel.hotelBenefit.carBorow} />
+							<Checkbox label={"Wifi free"} ref={wifiFreeRef} defaultChecked={hotel.hotelBenefit.wifiFree} />
+							<Checkbox label={"Chỗ đậu xe"} ref={parkingRef} defaultChecked={hotel.hotelBenefit.parking} />
+							<Checkbox
+								label={"Cho phép dắt thú cưng"}
+								ref={allowPetRef}
+								defaultChecked={hotel.hotelBenefit.allowPet}
+							/>
+						</div>
+					</fieldset>
+					<div className="row mb-3">
+						<label htmlFor="" className="col-sm-3 col-form-label"></label>
+						<div className="col-sm-9">
+							<button type="submit" className="btn btn-primary">
+								Cập nhật
+							</button>
+							<button
+								type="button"
+								onClick={() => {
+									navigate(-1);
+								}}
+								className="ms-3 btn btn-danger">
+								Hủy
+							</button>
+						</div>
 					</div>
-				</fieldset>
-				<div className="row mb-3">
-					<label htmlFor="" className="col-sm-3 col-form-label"></label>
-					<div className="col-sm-9">
-						<button type="submit" className="btn btn-primary">
-							Cập nhật
-						</button>
-						<button
-							type="button"
-							onClick={() => {
-								navigate(-1);
-							}}
-							className="ms-3 btn btn-danger">
-							Hủy
-						</button>
-					</div>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+		</>
 	);
 }
