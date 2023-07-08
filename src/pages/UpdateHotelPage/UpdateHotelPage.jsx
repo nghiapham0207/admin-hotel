@@ -13,13 +13,6 @@ import { routes } from "../../routes";
 import { getDetailHotel } from "../../services/hotelServices";
 import { getCategories } from "../../services/categoryServices";
 
-const categoriesFallback = [
-	{ id: 1, name: "Hotel", hotels: null },
-	{ id: 2, name: "Motel", hotels: null },
-	{ id: 3, name: "HomeStay", hotels: null },
-	{ id: 4, name: "Resort", hotels: null },
-];
-
 export default function UpdateHotelPage() {
 	const nameRef = useRef();
 	const descriptionRef = useRef();
@@ -224,7 +217,7 @@ export default function UpdateHotelPage() {
 				},
 			});
 			if (res.data.success) {
-				// e.target.reset();
+				hotelDetailState.refetch();
 				toast.update(toastId, {
 					render: res.data.message,
 					type: "success",

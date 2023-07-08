@@ -109,7 +109,7 @@ export default function CreateRoomPage() {
 							ref={guestRef}
 							placeholder=""
 							type="number"
-							min={0}
+							min={1}
 							defaultValue={1}
 							required
 							className="form-control"
@@ -125,7 +125,7 @@ export default function CreateRoomPage() {
 							ref={numOfBedRef}
 							placeholder=""
 							type="number"
-							min={0}
+							min={1}
 							defaultValue={1}
 							required
 							className="form-control"

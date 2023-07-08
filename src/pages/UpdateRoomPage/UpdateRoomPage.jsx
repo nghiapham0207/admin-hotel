@@ -75,7 +75,6 @@ export default function UpdateRoomPage() {
 		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 		const toastId = toast.loading("Đang xử lý!");
 		const formData = new FormData();
-		const today = new Date();
 		formData.append("id", roomId);
 		formData.append("name", nameRef.current.value);
 		formData.append("numOfPeope", guestRef.current.value);
@@ -98,12 +97,6 @@ export default function UpdateRoomPage() {
 			refund: refundRef.current.checked,
 			reschedule: rescheduleRef.current.checked,
 		};
-		// formData.append("CreatedDate", today.toISOString());
-		// formData.append("UpdateDate", today.toISOString());
-		// formData.append("HotelId", hotelId);
-		// formData.append("Images", img1Ref.current);
-		// formData.append("Images", img2Ref.current);
-		// formData.append("Images", img3Ref.current);
 		try {
 			const res = await axiosJwt.put(url.updateRoom, bodyData, {
 				headers: {
@@ -214,7 +207,7 @@ export default function UpdateRoomPage() {
 					<HorizontalInput
 						ref={guestRef}
 						type="number"
-						min={0}
+						min={1}
 						label={"Số khách 1 phòng"}
 						defaultValue={room.numOfPeope}
 						required={true}
@@ -222,7 +215,7 @@ export default function UpdateRoomPage() {
 					<HorizontalInput
 						ref={numOfBedRef}
 						type="number"
-						min={0}
+						min={1}
 						label={"Số giường"}
 						defaultValue={room.numOfBed}
 						required={true}
@@ -238,7 +231,7 @@ export default function UpdateRoomPage() {
 					<HorizontalInput
 						ref={priceRef}
 						type="number"
-						min={0}
+						min={1}
 						label={"Giá phòng"}
 						defaultValue={room.price}
 						required={true}
@@ -246,7 +239,7 @@ export default function UpdateRoomPage() {
 					<HorizontalInput
 						ref={totalRef}
 						type="number"
-						min={0}
+						min={1}
 						label={"Số phòng"}
 						defaultValue={room.totalRoom}
 						required={true}

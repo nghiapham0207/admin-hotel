@@ -12,13 +12,6 @@ import Checkbox from "../../components/Checkbox";
 import TextAreaMe from "../../components/TextAreaMe";
 import { getCategories } from "../../services/categoryServices";
 
-const categoriesFallback = [
-	{ id: 1, name: "Hotel", hotels: null },
-	{ id: 2, name: "Motel", hotels: null },
-	{ id: 3, name: "HomeStay", hotels: null },
-	{ id: 4, name: "Resort", hotels: null },
-];
-
 export default function CreateHotelPage() {
 	const nameRef = useRef();
 	const descriptionRef = useRef();
@@ -216,7 +209,7 @@ export default function CreateHotelPage() {
 		} catch (error) {
 			console.log(error);
 			toast.update(toastId, {
-				render: "Không thể tạo!",
+				render: "Không thể tạo! Khách sạn chưa được duyệt!",
 				type: "error",
 				closeButton: true,
 				autoClose: 1000,

@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
 import { routes } from "../../routes";
 import { useQuery } from "@tanstack/react-query";
-import { axiosJWT, axiosPost, url } from "../../utils/httpRequest";
+import { axiosJWT, url } from "../../utils/httpRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
 import { toast } from "react-toastify";
-
-const categories = [
-	{ id: 1, name: "Hotel", hotels: null },
-	{ id: 2, name: "Motel", hotels: null },
-	{ id: 3, name: "HomeStay", hotels: null },
-	{ id: 4, name: "Resort", hotels: null },
-];
+import { getCategories } from "../../services/categoryServices";
 
 export default function HotelPage() {
 	const currentUser = useSelector(selectUser);
@@ -39,6 +33,14 @@ export default function HotelPage() {
 	let listHotel = [];
 	if (listHotelState.isSuccess && listHotelState.data.data.success) {
 		listHotel = listHotelState.data.data.hotels;
+	}
+	const categoriesState = useQuery({
+		queryKey: ["categories"],
+		queryFn: getCategories,
+	});
+	let categories = [];
+	if (categoriesState.isSuccess) {
+		categories = categoriesState.data.category;
 	}
 	const handleDelete = async (id) => {
 		if (confirm("Bạn có muốn xóa không?") == true) {
@@ -104,7 +106,7 @@ export default function HotelPage() {
 											{
 												categories.find((category) => {
 													return category.id === hotel.hotelCategoryId;
-												}).name
+												})?.name
 											}
 										</td>
 										<td className={`${hotel.approval ? "" : " text-danger "}`}>
