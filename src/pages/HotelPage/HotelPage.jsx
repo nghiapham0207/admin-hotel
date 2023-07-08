@@ -13,7 +13,7 @@ export default function HotelPage() {
 	const refreshToken = useSelector(selectRefreshToken);
 	const dispatch = useDispatch();
 	const listHotelState = useQuery({
-		queryKey: ["hotel", currentUser],
+		queryKey: ["hotel", currentUser.id],
 		queryFn: async () => {
 			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 			try {

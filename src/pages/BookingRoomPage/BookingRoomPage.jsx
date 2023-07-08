@@ -5,15 +5,17 @@ import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/s
 import { axiosJWT, url } from "../../utils/httpRequest";
 import { useQuery } from "@tanstack/react-query";
 import { dateToString } from "../../utils/helpers";
+import UserInfo from "../../components/UserInfo/UserInfo";
 
 export default function BookingRoomPage() {
+	console.log("render");
 	const { hotelId } = useParams();
 	const currentUser = useSelector(selectUser);
 	const accessToken = useSelector(selectAccessToken);
 	const refreshToken = useSelector(selectRefreshToken);
 	const dispatch = useDispatch();
 	const bookingListState = useQuery({
-		queryKey: ["bookingList", currentUser],
+		queryKey: ["bookingList", currentUser, hotelId],
 		queryFn: async () => {
 			const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 			try {
@@ -35,38 +37,54 @@ export default function BookingRoomPage() {
 		bookingList = bookingListState.data.data.bookingList;
 	}
 	return (
-		<div className="bg-light rounded h-100 p-4">
-			<div className="mb-4 d-flex justify-content-between align-items-center">
-				<h4 className="mb-0">Danh sách đơn đặt phòng</h4>
-			</div>
-			<div className="table-responsive">
-				<table className="table">
-					<thead>
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">Tên phòng</th>
-							<th scope="col">Khách sạn</th>
-							<th scope="col">Khách hàng</th>
-							<th scope="col">Ngày nhận</th>
-							<th scope="col">Ngày trả</th>
-							<th scope="col">Khách hủy</th>
-							<th scope="col">Chi tiết</th>
+		<>
+			<div className="bg-light rounded h-100 p-4">
+				<div className="mb-4 d-flex justify-content-between align-items-center">
+					<h4 className="mb-0">Danh sách đơn đặt phòng</h4>
+				</div>
+				<div className="table-responsive">
+					<table className="table">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">Tên phòng</th>
+								<th scope="col">Khách sạn</th>
+								<th scope="col">Ngày nhận</th>
+								<th scope="col">Ngày trả</th>
+								<th scope="col">Trạng thái</th>
+								<th scope="col">Khách hàng</th>
+								{/* <th scope="col">Chi tiết</th>
 							<th scope="col">Duyệt</th>
-							<th scope="col">Xóa/Hủy</th>
-						</tr>
-					</thead>
-					<tbody>
-						{bookingList.length > 0
-							? bookingList.map((booking, index) => (
-									<tr className="align-middle">
-										<th scope="row">{index + 1}</th>
-										<td>{booking.roomName}</td>
-										<td>{booking.hotelName}</td>
-										<td>{booking.userId}</td>
-										<td>{dateToString(booking.fromDate)}</td>
-										<td>{dateToString(booking.toDate)}</td>
-										<td>{booking.returned ? "Đã hủy" : "Chưa hủy"}</td>
-										<td>
+							<th scope="col">Xóa/Hủy</th> */}
+							</tr>
+						</thead>
+						<tbody>
+							{bookingList.length > 0
+								? bookingList.map((booking, index) => (
+										<tr key={booking.id} className="align-middle">
+											<th scope="row">{index + 1}</th>
+											<td>{booking.roomName}</td>
+											<td>{booking.hotelName}</td>
+											<td>{dateToString(booking.fromDate)}</td>
+											<td>{dateToString(booking.toDate)}</td>
+											<td className={`${booking.returned ? " text-danger " : " text-success "}`}>
+												{booking.returned ? "Đã hủy" : "Chưa hủy"}
+											</td>
+											<td>
+												<>
+													{/* Button trigger modal */}
+													<button
+														type="button"
+														className="btn btn-primary"
+														data-bs-toggle="modal"
+														data-bs-target={`#user${booking.userId}`}>
+														Xem
+													</button>
+													{/* Modal */}
+													<UserInfo userId={booking.userId} />
+												</>
+											</td>
+											{/* <td>
 											<button type="button" className="btn btn-outline-primary">
 												Xem
 											</button>
@@ -78,13 +96,14 @@ export default function BookingRoomPage() {
 										</td>
 										<td>
 											<button className="btn btn-danger">Xóa</button>
-										</td>
-									</tr>
-							  ))
-							: null}
-					</tbody>
-				</table>
+										</td> */}
+										</tr>
+								  ))
+								: null}
+						</tbody>
+					</table>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }

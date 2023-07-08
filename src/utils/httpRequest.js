@@ -32,6 +32,7 @@ export const url = {
 	forgotPassword: "user/fogot-password",
 	resetPassword: "user/reset-password",
 	categories: "category",
+	getBookedUserInfo: "user/",
 };
 
 /**

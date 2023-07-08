@@ -284,11 +284,15 @@ export default function UpdateHotelPage() {
 			<div className="bg-light rounded h-100 p-5">
 				<div className="d-flex justify-content-between">
 					<h4 className="mb-4">Cập nhật khách sạn</h4>
-					<div>
-						<Link to={routes.hotel + "/" + hotel.id + "/room"} className="btn btn-outline-primary me-2">
+					<div className="">
+						<Link
+							to={routes.hotel + "/" + hotel.id + "/room"}
+							className={`btn mx-1 ${hotel.approval ? "btn-outline-primary " : " btn-secondary disabled"}`}>
 							Xem phòng
 						</Link>
-						<Link to={routes.hotel + "/" + hotel.id + "/booking"} className="btn btn-outline-primary">
+						<Link
+							to={routes.hotel + "/" + hotel.id + "/booking"}
+							className={`btn mx-1 ${hotel.approval ? "btn-outline-primary " : " btn-secondary disabled"}`}>
 							Xem đơn đặt phòng
 						</Link>
 					</div>
