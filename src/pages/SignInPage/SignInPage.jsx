@@ -51,9 +51,7 @@ export default function SignInPage() {
 						userName: username,
 						password,
 					});
-					console.log(res);
 					const userRes = await getUser(res.accessToken, res.refreshToken, dispatch);
-					console.log(userRes);
 					if (userRes.isSuccess) {
 						toast.update(toastId, {
 							render: "Đăng nhập thành công!",

@@ -17,7 +17,6 @@ export default function RoomPage() {
 		queryFn: async () => {
 			try {
 				const res = await axiosGet(url.room + hotelId);
-				console.log(res);
 				return res;
 			} catch (error) {
 				return Promise.reject(error);
@@ -39,7 +38,6 @@ export default function RoomPage() {
 						Authorization: "Bearer " + accessToken,
 					},
 				});
-				console.log(res);
 				hotelState.refetch();
 				toast.update(toastId, {
 					render: "Xóa thành công!",
@@ -63,7 +61,7 @@ export default function RoomPage() {
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
-				<h6 className="mb-0">Danh sách phòng</h6>
+				<h4 className="mb-0">Danh sách phòng</h4>
 				<Link to={routes.hotel + "/" + hotelId + "/room/create"} className="btn btn-outline-primary">
 					Thêm phòng
 				</Link>

@@ -13,9 +13,7 @@ export default function ResetPasswordPage() {
 	const location = useLocation();
 	const searchParams = new URLSearchParams(location.search);
 	const tokenStr = searchParams.get("token");
-	console.log(typeof tokenStr);
 	const token = tokenStr.substring(1);
-	console.log(token);
 
 	const navigate = useNavigate();
 
@@ -41,7 +39,6 @@ export default function ResetPasswordPage() {
 
 		if (Object.keys(errors).length) {
 			setErrors(errors);
-			console.log(errors);
 		} else {
 			setErrors({
 				...initErrorState,
@@ -61,7 +58,6 @@ export default function ResetPasswordPage() {
 				token,
 				newPassword: password,
 			});
-			console.log(res);
 			if (res.success) {
 				navigate("/");
 				toast.update(toastId, {

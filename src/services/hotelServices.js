@@ -3,14 +3,12 @@ import { axiosGet, url } from "../utils/httpRequest";
 export const getDetailHotel = async (hotelId) => {
 	try {
 		const hotelRes = await axiosGet(url.detailHotel + hotelId);
-		console.log(hotelRes);
 		let districtRes;
 		try {
 			districtRes = await axiosGet(url.district + hotelRes.hotelDto.provineId);
 		} catch (error) {
 			return Promise.reject(error);
 		}
-		console.log(districtRes);
 		let homeletRes;
 		try {
 			homeletRes = await axiosGet(url.homelet + hotelRes.hotelDto.districtId);

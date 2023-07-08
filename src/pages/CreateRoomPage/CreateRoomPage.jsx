@@ -67,7 +67,6 @@ export default function CreateRoomPage() {
 					"Content-Type": "multipart/form-data",
 				},
 			});
-			console.log(res);
 			if (res.data.success) {
 				e.target.reset();
 				toast.update(toastId, {

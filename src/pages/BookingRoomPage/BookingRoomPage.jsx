@@ -30,7 +30,6 @@ export default function BookingRoomPage() {
 		},
 		staleTime: 3 * 60 * 1000,
 	});
-	console.log(bookingListState);
 	let bookingList = [];
 	if (bookingListState.isSuccess && bookingListState.data.data.success) {
 		bookingList = bookingListState.data.data.bookingList;
@@ -38,7 +37,7 @@ export default function BookingRoomPage() {
 	return (
 		<div className="bg-light rounded h-100 p-4">
 			<div className="mb-4 d-flex justify-content-between align-items-center">
-				<h6 className="mb-0">Danh sách đơn đặt phòng</h6>
+				<h4 className="mb-0">Danh sách đơn đặt phòng</h4>
 			</div>
 			<div className="table-responsive">
 				<table className="table">

@@ -53,7 +53,6 @@ export default function CreateHotelPage() {
 		queryKey: ["categories"],
 		queryFn: getCategories,
 	});
-	console.log(categoriesState);
 	let categories = [];
 	if (categoriesState.isSuccess) {
 		categories = categoriesState.data.category;
@@ -152,7 +151,6 @@ export default function CreateHotelPage() {
 		if (provinceRef.current.value === "undefined") {
 			provinceRef.current.focus();
 			provinceRef.current.classList.add("is-invalid");
-			console.log({ ...provinceRef.current });
 			return;
 		} else {
 			provinceRef.current.classList.remove("is-invalid");
@@ -160,7 +158,6 @@ export default function CreateHotelPage() {
 		if (districtRef.current.value === "undefined") {
 			districtRef.current.focus();
 			districtRef.current.classList.add("is-invalid");
-			console.log({ ...districtRef.current });
 			return;
 		} else {
 			districtRef.current.classList.remove("is-invalid");
@@ -168,7 +165,6 @@ export default function CreateHotelPage() {
 		if (homeletRef.current.value === "undefined") {
 			homeletRef.current.focus();
 			homeletRef.current.classList.add("is-invalid");
-			console.log({ ...homeletRef.current });
 			return;
 		} else {
 			homeletRef.current.classList.remove("is-invalid");
@@ -207,7 +203,6 @@ export default function CreateHotelPage() {
 					"Content-Type": "multipart/form-data",
 				},
 			});
-			console.log(res);
 			if (res.data.success) {
 				e.target.reset();
 				toast.update(toastId, {

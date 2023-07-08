@@ -49,7 +49,6 @@ const getNewAccessToken = async (refreshToken) => {
 				Authorization: refreshToken,
 			},
 		});
-		console.log(res);
 		return res.data;
 	} catch (error) {
 		console.log("refreshToken", error);
@@ -79,7 +78,6 @@ export const axiosJWT = (accessToken, refreshToken, dispatch) => {
 			return config;
 		},
 		(error) => {
-			console.log(error);
 			return Promise.reject(error);
 		},
 	);

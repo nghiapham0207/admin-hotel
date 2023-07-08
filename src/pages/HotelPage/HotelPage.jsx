@@ -50,7 +50,6 @@ export default function HotelPage() {
 						Authorization: "Bearer " + accessToken,
 					},
 				});
-				// console.log(res);
 				listHotelState.refetch();
 				toast.update(toastId, {
 					render: "Xóa thành công!",

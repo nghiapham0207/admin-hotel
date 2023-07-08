@@ -32,7 +32,6 @@ export default function ForgotPasswordPage() {
 						email,
 						url: window.location.host + "/reset-password?token=",
 					});
-					console.log(res);
 					toast.update(toastId, {
 						render: "Đã gửi liên kết đến địa chỉ email của bạn!",
 						type: "success",

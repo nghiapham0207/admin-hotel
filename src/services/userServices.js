@@ -13,7 +13,6 @@ export const getUser = async (accessToken, refreshToken, dispatch) => {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-			console.log(res);
 			let isBlock = Boolean(res.data.userDto.isBlock);
 			if (res.data.userDto.roles.includes("admin")) {
 				if (!isBlock) {

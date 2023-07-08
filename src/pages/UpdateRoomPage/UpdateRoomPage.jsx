@@ -148,7 +148,6 @@ export default function UpdateRoomPage() {
 					Authorization: "Bearer " + accessToken,
 				},
 			});
-			console.log(res);
 		} catch (error) {
 			console.log(error);
 			toast.error("Cập nhật ảnh thất bại!", {
@@ -175,7 +174,6 @@ export default function UpdateRoomPage() {
 					...body,
 				},
 			});
-			console.log(res);
 		} catch (error) {
 			console.log(error);
 		}

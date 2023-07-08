@@ -26,7 +26,6 @@
 
 	// Sidebar Toggler
 	$(".sidebar-toggler").click(function () {
-		console.log("ccc");
 		$(".sidebar, .content").toggleClass("open");
 		return false;
 	});
