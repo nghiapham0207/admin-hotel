@@ -14,7 +14,7 @@ export default function Header() {
 		<>
 			{/* Navbar Start */}
 			<nav className="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-				<a href="index.html" className="navbar-brand d-flex d-lg-none me-4">
+				<a href="/hotel" className="navbar-brand d-flex d-lg-none me-4">
 					<h2 className="text-primary mb-0">
 						<i className="fa fa-hashtag" />
 					</h2>

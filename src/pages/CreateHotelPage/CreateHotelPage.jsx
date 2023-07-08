@@ -10,8 +10,9 @@ import HorizontalInput from "../../components/HorizontalInput";
 import HorizontalSelect from "../../components/HorizontalSelect";
 import Checkbox from "../../components/Checkbox";
 import TextAreaMe from "../../components/TextAreaMe";
+import { getCategories } from "../../services/categoryServices";
 
-const categories = [
+const categoriesFallback = [
 	{ id: 1, name: "Hotel", hotels: null },
 	{ id: 2, name: "Motel", hotels: null },
 	{ id: 3, name: "HomeStay", hotels: null },
@@ -47,6 +48,16 @@ export default function CreateHotelPage() {
 
 	const [getDistrict, setGetDistrict] = useState(false);
 	const [getHomelet, setGetHomelet] = useState(false);
+
+	const categoriesState = useQuery({
+		queryKey: ["categories"],
+		queryFn: getCategories,
+	});
+	console.log(categoriesState);
+	let categories = [];
+	if (categoriesState.isSuccess) {
+		categories = categoriesState.data.category;
+	}
 
 	const hotelProvince = useQuery({
 		queryKey: ["hotelProvince"],
@@ -138,9 +149,29 @@ export default function CreateHotelPage() {
 	};
 	const handlePost = async (e) => {
 		e.preventDefault();
-		if (homeletRef.current.value === "undefined") {
+		if (provinceRef.current.value === "undefined") {
 			provinceRef.current.focus();
+			provinceRef.current.classList.add("is-invalid");
+			console.log({ ...provinceRef.current });
 			return;
+		} else {
+			provinceRef.current.classList.remove("is-invalid");
+		}
+		if (districtRef.current.value === "undefined") {
+			districtRef.current.focus();
+			districtRef.current.classList.add("is-invalid");
+			console.log({ ...districtRef.current });
+			return;
+		} else {
+			districtRef.current.classList.remove("is-invalid");
+		}
+		if (homeletRef.current.value === "undefined") {
+			homeletRef.current.focus();
+			homeletRef.current.classList.add("is-invalid");
+			console.log({ ...homeletRef.current });
+			return;
+		} else {
+			homeletRef.current.classList.remove("is-invalid");
 		}
 		const axiosJwt = axiosJWT(accessToken, refreshToken, dispatch);
 		const toastId = toast.loading("Đang xử lý!");

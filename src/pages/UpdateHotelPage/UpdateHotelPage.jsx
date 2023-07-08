@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosGet, axiosJWT, url } from "../../utils/httpRequest";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import HorizontalInput from "../../components/HorizontalInput";
 import HorizontalSelect from "../../components/HorizontalSelect";
@@ -9,8 +9,11 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAccessToken, selectRefreshToken, selectUser } from "../../redux/selectors";
 import TextAreaMe from "../../components/TextAreaMe/TextAreaMe";
+import { routes } from "../../routes";
+import { getDetailHotel } from "../../services/hotelServices";
+import { getCategories } from "../../services/categoryServices";
 
-const categories = [
+const categoriesFallback = [
 	{ id: 1, name: "Hotel", hotels: null },
 	{ id: 2, name: "Motel", hotels: null },
 	{ id: 3, name: "HomeStay", hotels: null },
@@ -51,36 +54,21 @@ export default function UpdateHotelPage() {
 	const hotelDetailState = useQuery({
 		queryKey: ["hotel", hotelId],
 		queryFn: async () => {
-			try {
-				const hotelRes = await axiosGet(url.detailHotel + hotelId);
-				console.log(hotelRes);
-				let districtRes;
-				try {
-					districtRes = await axiosGet(url.district + hotelRes.hotelDto.provineId);
-				} catch (error) {
-					return Promise.reject(error);
-				}
-				console.log(districtRes);
-				let homeletRes;
-				try {
-					homeletRes = await axiosGet(url.homelet + hotelRes.hotelDto.districtId);
-				} catch (error) {
-					return Promise.reject(error);
-				}
-				return {
-					...hotelRes,
-					hotelDto: {
-						...hotelRes.hotelDto,
-						districts: districtRes.data,
-						homelets: homeletRes.data,
-					},
-				};
-			} catch (error) {
-				return Promise.reject(error);
-			}
+			return getDetailHotel(hotelId);
 		},
 		staleTime: 3 * 60 * 1000,
 	});
+	// ---------------------------------------------------------------------------
+	const categoriesState = useQuery({
+		queryKey: ["categories"],
+		queryFn: getCategories,
+	});
+	console.log(categoriesState);
+	let categories = [];
+	if (categoriesState.isSuccess) {
+		categories = categoriesState.data.category;
+	}
+
 	const hotelProvince = useQuery({
 		queryKey: ["hotelProvince"],
 		queryFn: async () => {
@@ -177,6 +165,30 @@ export default function UpdateHotelPage() {
 	}
 	const handleUpdate = async (e) => {
 		e.preventDefault();
+		if (provinceRef.current.value === "undefined") {
+			provinceRef.current.focus();
+			provinceRef.current.classList.add("is-invalid");
+			console.log({ ...provinceRef.current });
+			return;
+		} else {
+			provinceRef.current.classList.remove("is-invalid");
+		}
+		if (districtRef.current.value === "undefined") {
+			districtRef.current.focus();
+			districtRef.current.classList.add("is-invalid");
+			console.log({ ...districtRef.current });
+			return;
+		} else {
+			districtRef.current.classList.remove("is-invalid");
+		}
+		if (homeletRef.current.value === "undefined") {
+			homeletRef.current.focus();
+			homeletRef.current.classList.add("is-invalid");
+			console.log({ ...homeletRef.current });
+			return;
+		} else {
+			homeletRef.current.classList.remove("is-invalid");
+		}
 		let homeletId = homeletRef.current.value;
 		if (homeletRef.current.value === "undefined") {
 			homeletId = hotel.homeletId;
@@ -281,7 +293,17 @@ export default function UpdateHotelPage() {
 				</div>
 			</div>
 			<div className="bg-light rounded h-100 p-5">
-				<h4 className="mb-4">Cập nhật khách sạn</h4>
+				<div className="d-flex justify-content-between">
+					<h4 className="mb-4">Cập nhật khách sạn</h4>
+					<div>
+						<Link to={routes.hotel + "/" + hotel.id + "/room"} className="btn btn-outline-primary me-2">
+							Xem phòng
+						</Link>
+						<Link to={routes.hotel + "/" + hotel.id + "/booking"} className="btn btn-outline-primary">
+							Xem đơn đặt phòng
+						</Link>
+					</div>
+				</div>
 				<form onSubmit={handleUpdate}>
 					<HorizontalInput label={"Tên khách sạn"} ref={nameRef} required={true} defaultValue={hotel.name} />
 					<TextAreaMe label={"Mô tả"} ref={descriptionRef} required={true} defaultValue={hotel.description} />

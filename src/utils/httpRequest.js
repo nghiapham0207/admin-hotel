@@ -31,6 +31,7 @@ export const url = {
 	deleteGalleries: "room/gallery",
 	forgotPassword: "user/fogot-password",
 	resetPassword: "user/reset-password",
+	categories: "category",
 };
 
 /**

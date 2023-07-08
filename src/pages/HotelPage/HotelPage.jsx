@@ -87,6 +87,7 @@ export default function HotelPage() {
 							<th scope="col">Tên khách sạn</th>
 							<th scope="col">Số sao</th>
 							<th scope="col">Loại</th>
+							<th scope="col">Trạng thái</th>
 							<th scope="col">Chi tiết</th>
 							<th scope="col">Phòng</th>
 							<th scope="col">Đơn đặt phòng</th>
@@ -107,18 +108,27 @@ export default function HotelPage() {
 												}).name
 											}
 										</td>
+										<td className={`${hotel.approval ? "" : " text-danger "}`}>
+											{hotel.approval ? "Đã được duyệt" : "Chưa được duyệt"}
+										</td>
 										<td>
-											<Link to={routes.hotel + "/" + hotel.id} className="btn btn-outline-primary">
+											<Link
+												to={routes.hotel + "/" + hotel.id}
+												className={`btn ${true ? "btn-outline-primary " : " btn-secondary disabled"}`}>
 												Xem
 											</Link>
 										</td>
 										<td>
-											<Link to={routes.hotel + "/" + hotel.id + "/room"} className="btn btn-outline-primary">
+											<Link
+												to={routes.hotel + "/" + hotel.id + "/room"}
+												className={`btn ${hotel.approval ? "btn-outline-primary " : " btn-secondary disabled"}`}>
 												Xem
 											</Link>
 										</td>
 										<td>
-											<Link to={routes.hotel + "/" + hotel.id + "/booking"} className="btn btn-outline-primary">
+											<Link
+												to={routes.hotel + "/" + hotel.id + "/booking"}
+												className={`btn ${hotel.approval ? "btn-outline-primary " : " btn-secondary disabled"}`}>
 												Xem
 											</Link>
 										</td>

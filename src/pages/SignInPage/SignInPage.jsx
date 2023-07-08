@@ -25,6 +25,7 @@ export default function SignInPage() {
 	const [errors, setErrors] = useState(initState);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	let canNext = false;
 
 	if (currentUser) {
 		return <Navigate to={routes.hotel} />;
@@ -50,21 +51,45 @@ export default function SignInPage() {
 						userName: username,
 						password,
 					});
-					toast.update(toastId, {
-						render: "Đăng nhập thành công!",
-						type: "success",
-						closeButton: true,
-						autoClose: 1000,
-						isLoading: false,
-					});
-					dispatch(loginSuccess({ accessToken: res.accessToken, refreshToken: res.refreshToken }));
-					getUser(res.accessToken, res.refreshToken, dispatch);
-					if (next) {
-						setTimeout(() => {
-							navigate(next);
-						}, 1000);
+					console.log(res);
+					const userRes = await getUser(res.accessToken, res.refreshToken, dispatch);
+					console.log(userRes);
+					if (userRes.isSuccess) {
+						toast.update(toastId, {
+							render: "Đăng nhập thành công!",
+							type: "success",
+							closeButton: true,
+							autoClose: 1000,
+							isLoading: false,
+						});
+						dispatch(loginSuccess({ accessToken: res.accessToken, refreshToken: res.refreshToken }));
+						if (next) {
+							setTimeout(() => {
+								navigate(next);
+							}, 0);
+							// canNext = true;
+							// return <Navigate to={next} />;
+						} else {
+							navigate(routes.home);
+						}
 					} else {
-						navigate(routes.home);
+						if (userRes.isBlock) {
+							toast.update(toastId, {
+								render: "Tài khoản của bạn đã bị khóa!",
+								type: "error",
+								closeButton: true,
+								autoClose: 1000,
+								isLoading: false,
+							});
+						} else {
+							toast.update(toastId, {
+								render: "Bạn không có quyền đăng nhập!",
+								type: "error",
+								closeButton: true,
+								autoClose: 1000,
+								isLoading: false,
+							});
+						}
 					}
 				} catch (error) {
 					console.log(error);
@@ -86,6 +111,12 @@ export default function SignInPage() {
 			[name]: "",
 		});
 	};
+	// if (canNext) {
+	// 	return <Navigate to={next} />;
+	// }
+	if (currentUser) {
+		return <Navigate to={routes.hotel} />;
+	}
 	return (
 		<div className="container-xxl bg-white d-flex p-0">
 			<div className="container-fluid">

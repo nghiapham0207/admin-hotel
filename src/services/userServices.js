@@ -13,11 +13,30 @@ export const getUser = async (accessToken, refreshToken, dispatch) => {
 					Authorization: `Bearer ${accessToken}`,
 				},
 			});
-			dispatch(updateUser(res.data.userDto));
-			return {
-				isSuccess: true,
-				data: res.data,
-			};
+			console.log(res);
+			let isBlock = Boolean(res.data.userDto.isBlock);
+			if (res.data.userDto.roles.includes("admin")) {
+				if (!isBlock) {
+					dispatch(updateUser(res.data.userDto));
+					return {
+						isSuccess: true,
+						isBlock: false,
+						data: res.data,
+					};
+				} else {
+					return {
+						isSuccess: false,
+						isBlock: true,
+						data: null,
+					};
+				}
+			} else {
+				return {
+					isSuccess: false,
+					isBlock: false,
+					data: null,
+				};
+			}
 		} catch (error) {
 			console.log(error);
 			return {
