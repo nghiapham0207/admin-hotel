@@ -1,4 +1,4 @@
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, redirect, useLocation, useNavigate } from "react-router-dom";
 import { routes } from "../../routes";
 import { useRef, useState } from "react";
 import { validateEmail, validatePassword } from "../../utils/helpers";
@@ -62,13 +62,11 @@ export default function SignInPage() {
 						});
 						dispatch(loginSuccess({ accessToken: res.accessToken, refreshToken: res.refreshToken }));
 						if (next) {
-							setTimeout(() => {
-								navigate(next);
-							}, 0);
-							// canNext = true;
-							// return <Navigate to={next} />;
+							navigate(next, {
+								replace: true,
+							});
 						} else {
-							navigate(routes.home);
+							navigate(routes.hotel);
 						}
 					} else {
 						if (userRes.isBlock) {
